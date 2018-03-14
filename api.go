@@ -59,25 +59,5 @@ func (api API) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if strings.HasPrefix(req.URL.Path, "/v1/metrics/") {
-		id := strings.TrimPrefix(req.URL.Path, "/v1/metrics/")
-
-		if req.Method == "GET" {
-			Lock.Lock()
-			defer Lock.Unlock()
-
-			m, ok := Metrics[id]
-			if !ok {
-				oops(w, 404, "metric not found.")
-				return
-			}
-			reply(w, 200, m)
-			return
-		}
-
-		oops(w, 405, "method not allowed.")
-		return
-	}
-
 	oops(w, 404, "not found.")
 }

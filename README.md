@@ -98,9 +98,8 @@ integration as well:
 API Usage
 ---------
 
-The `cachefire` API sports two endpoints, one for retrieving _all_
-of the collected metrics, and another for zeroing in on a single
-metric.
+The `cachefire` API sports a single endpoint for retrieving _all_
+of the collected metrics.
 
 Measurements come in two types: _values_ and _counters_.  Values
 contain a numeric quantity (the "value") combined with a unit.
@@ -114,38 +113,26 @@ Retrieves all of the metrics.
 curl -u user:secret https://$cachefire/v1/metrics | jq -r .
 
 {
-  "some.value": {
-    "type": "value",
-    "name": "some.value",
-    "value": 3.477268,
-    "unit": "ms"
-  },
+  "job-name": {
+    "0": {
+      "some.value": {
+        "type": "value",
+        "name": "some.value",
+        "value": 3.477268,
+        "unit": "ms"
+      },
 
-  ...
+      ...
 
-  "some.counter": {
-    "type": "counter",
-    "name": "some.counter",
-    "value": 2400
+      "some.counter": {
+        "type": "counter",
+        "name": "some.counter",
+        "value": 2400
+      }
+    }
   }
 }
 ```
 
 The returned map is keyed by metric name, which is also included
 in the measurement itself, under the "name" key.
-
-
-### GET /v1/metric/:id
-
-Retrieve a single metric.
-
-```
-curl -u user:secret https://$cachefire/v1/metrics/some.value | jq -r .
-
-{
-  "type": "value",
-  "name": "some.value",
-  "value": 3.477268,
-  "unit": "ms"
-}
-```

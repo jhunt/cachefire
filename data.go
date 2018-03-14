@@ -9,12 +9,13 @@ import (
 )
 
 var (
-	Metrics map[string]Metric
+	/* deplloyment/job -> index -> name -> value */
+	Metrics map[string] map[string] map[string] Metric
 	Lock    sync.Mutex
 )
 
 func init() {
-	Metrics = make(map[string]Metric)
+	Metrics = make(map[string] map[string] map[string] Metric)
 }
 
 type Metric struct {
@@ -26,6 +27,17 @@ type Metric struct {
 	Unit  string
 
 	Tally uint64
+}
+
+func (m Metric) String() string {
+	switch m.Type {
+	case firehose.ValueMetric:
+		return fmt.Sprintf("value %f (%s)", m.Value, m.Unit)
+	case firehose.CounterEvent:
+		return fmt.Sprintf("counter %d", m.Tally)
+	default:
+		return "((unknown type))"
+	}
 }
 
 func (m *Metric) UnmarshalJSON(b []byte) error {
