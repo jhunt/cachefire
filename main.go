@@ -3,6 +3,7 @@ package main
 import (
 	fmt "github.com/jhunt/go-ansi"
 	"net/http"
+	"time"
 	"os"
 
 	"github.com/jhunt/go-cli"
@@ -19,10 +20,12 @@ func main() {
 		Port     string `cli:"--port"          env:"PORT"`
 		LogLevel string `cli:"-l, --log-level" env:"LOG_LEVEL"`
 		Debug    bool   `cli:"-D, --debug"     env:"DEBUG"`
+		MaxAge   int   `cli:"--max-age"       env:"CACHE_MAX_AGE"`
 	}
 	opts.Username = "cachefire"
 	opts.Port = "3000"
 	opts.LogLevel = "warning"
+	opts.MaxAge = 3600
 	env.Override(&opts)
 	_, _, err := cli.Parse(&opts)
 	if err != nil {
@@ -43,6 +46,12 @@ func main() {
 		Level: opts.LogLevel,
 	})
 
+	go func () {
+		t := time.NewTicker(time.Duration(10) * time.Second)
+		for _ = range t.C {
+			Prune(opts.MaxAge)
+		}
+	}()
 	go firehose.Go(&Nozzle{}, opts.Config)
 	http.Handle("/", API{
 		Username: opts.Username,

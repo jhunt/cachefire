@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"time"
 	"encoding/json"
 	"sync"
 
 	"github.com/jhunt/go-firehose"
+	"github.com/jhunt/go-log"
 )
 
 var (
@@ -16,6 +18,32 @@ var (
 
 func init() {
 	Metrics = make(map[string] map[string] map[string] Metric)
+}
+
+func Prune(expiry int) {
+	Lock.Lock()
+	defer Lock.Unlock()
+
+	log.Debugf("pruning metrics that haven't been seen in %d seconds", expiry)
+	deadline := time.Now().Unix() - int64(expiry)
+	for job := range Metrics {
+		for idx := range Metrics[job] {
+			for name, m := range Metrics[job][idx] {
+				if m.LastSeen < deadline {
+					log.Infof("removing [%s] metric from [%s][%s]", name, job, idx)
+					delete(Metrics[job][idx], name)
+				}
+			}
+			if len(Metrics[job][idx]) == 0 {
+				log.Infof("removing [%s] idx from [%s]", idx, job)
+				delete(Metrics[job], idx)
+			}
+		}
+		if len(Metrics[job]) == 0 {
+			log.Infof("removing [%s]", job)
+			delete(Metrics, job)
+		}
+	}
 }
 
 type Metric struct {

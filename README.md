@@ -24,10 +24,6 @@ implemented:
      If you run more than one, they will divide the firehose
      stream amongst them, but never re-integrate the cache.
 
-  2. Metric aging - if a metric stops being emitted through the
-     firehose, `cachefire` holds onto it and won't let go.  It
-     would be preferable to assign each cache entry a "last seen"
-     timestamp and regularly prune the cache accordingly.
 
 Deployment
 ----------
@@ -78,6 +74,12 @@ authentication parameters of the JSON API:
   be used to access the API.  This is **required**.
 - `$CACHE_FIRE_PASSWORD` - The HTTP Basic Auth password that must
   be used to access the API.  This is **required**.
+
+There is an environment variable for controlling how long
+`cachefire` will hold onto a metric it hasn't seen in a while:
+
+- `$CACHE_MAX_AGE` - How long (in seconds) before a metric will
+  age out of the cache.  Defaults to 1 hour (3600 seconds).
 
 There are environment variables for configuring the firehose / UAA
 integration as well:
