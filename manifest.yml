@@ -2,8 +2,9 @@
 applications:
   - name: cachefire
     memory: 1G
-    buildpack: binary_buildpack
+    buildpack: go_buildpack
     env:
+      GOPACKAGENAME: github.com/jhunt/cachefire
       CACHE_FIRE_USERNAME: cachefire
       NOZZLE_SUBSCRIPTION: cachefire-1
       NOZZLE_UAA_CLIENT: firehose
