@@ -1,0 +1,9 @@
+---
+applications:
+  - name: cachefire
+    memory: 1G
+    buildpack: binary_buildpack
+    env:
+      CACHE_FIRE_USERNAME: cachefire
+      NOZZLE_SUBSCRIPTION: cachefire-1
+      NOZZLE_UAA_CLIENT: firehose
