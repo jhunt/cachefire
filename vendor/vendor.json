@@ -91,10 +91,10 @@
 			"revisionTime": "2017-10-17T04:30:50Z"
 		},
 		{
-			"checksumSHA1": "M2U6y71U49EjYWYyTrS/efwilCQ=",
+			"checksumSHA1": "rdrStVZYwaYyTtTm6S1grzkkRTU=",
 			"path": "github.com/jhunt/go-firehose",
-			"revision": "99e80dc457d03da1d0d96893219d448cb3ba9267",
-			"revisionTime": "2018-03-14T13:17:03Z"
+			"revision": "68c2477ce51adf10b4c954680a232bd53a742ea7",
+			"revisionTime": "2018-03-29T18:43:14Z"
 		},
 		{
 			"checksumSHA1": "0zh8BzWlmxf6Sh76Qn3b+maOOKg=",
