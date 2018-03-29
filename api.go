@@ -50,7 +50,38 @@ func (api API) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			Lock.Lock()
 			defer Lock.Unlock()
 
-			reply(w, 200, Metrics)
+			switch req.URL.Query().Get("fmt") {
+			case "telegraf":
+				l := make([]Metric, 0)
+
+				for job := range Metrics {
+					for idx := range Metrics[job] {
+						for name := range Metrics[job][idx] {
+							m := Metrics[job][idx][name]
+
+							l = append(l, Metric{
+								Type:     m.Type,
+								Job:      job,
+								Index:    idx,
+								Name:     name,
+								LastSeen: m.LastSeen,
+
+								Value: m.Value,
+								Unit:  m.Unit,
+
+								Tally: m.Tally,
+							})
+						}
+					}
+				}
+				reply(w, 200, l)
+
+			case "", "default":
+				reply(w, 200, Metrics)
+
+			default:
+				oops(w, 400, "invalid format.")
+			}
 			return
 		}
 

@@ -48,6 +48,8 @@ func Prune(expiry int) {
 
 type Metric struct {
 	Type     firehose.EventType
+	Job      string
+	Index    string
 	Name     string
 	LastSeen int64
 
@@ -76,12 +78,17 @@ func (m Metric) MarshalJSON() ([]byte, error) {
 	switch m.Type {
 	case firehose.ValueMetric:
 		out := struct {
-			Type  string  `json:"type"`
+			Type  string `json:"type"`
+			Job   string `json:"job,omitempty"`
+			Index string `json:"index,omitempty"`
+
 			Name  string  `json:"name"`
 			Value float64 `json:"value"`
 			Unit  string  `json:"unit"`
 		}{
 			Type:  "value",
+			Job:   m.Job,
+			Index: m.Index,
 			Name:  m.Name,
 			Value: m.Value,
 			Unit:  m.Unit,
@@ -91,10 +98,15 @@ func (m Metric) MarshalJSON() ([]byte, error) {
 	case firehose.CounterEvent:
 		out := struct {
 			Type  string `json:"type"`
+			Job   string `json:"job,omitempty"`
+			Index string `json:"index,omitempty"`
+
 			Name  string `json:"name"`
 			Value uint64 `json:"value"`
 		}{
 			Type:  "counter",
+			Job:   m.Job,
+			Index: m.Index,
 			Name:  m.Name,
 			Value: m.Tally,
 		}

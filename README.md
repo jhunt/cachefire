@@ -138,3 +138,31 @@ curl -u user:secret https://$cachefire/v1/metrics | jq -r .
 
 The returned map is keyed by metric name, which is also included
 in the measurement itself, under the "name" key.
+
+If you pass the query string `?fmt=telegraf`, you will get back an
+array formatted for ingestion by a telegraf sender:
+
+```
+curl -u user:secret https://$cachefire/v1/metrics?fmt=telegraf | jq -r .
+
+[
+  {
+    "job": "job-name",
+    "index": "0",
+    "type": "value",
+    "name": "some.value",
+    "value": 3.477268,
+    "unit": "ms"
+  },
+
+ ...
+
+ {
+   "job": "job-name",
+   "index": "0",
+   "type": "counter",
+   "name": "some.counter",
+   "value": 2400
+  }
+]
+```
