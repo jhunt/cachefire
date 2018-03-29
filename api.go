@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"os"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 func reply(w http.ResponseWriter, code int, thing interface{}) {
@@ -30,7 +30,7 @@ func oops(w http.ResponseWriter, code int, err string) {
 }
 
 type API struct {
-	Username  string
+	Username string
 	Password string
 }
 

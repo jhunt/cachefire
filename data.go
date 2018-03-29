@@ -1,23 +1,23 @@
 package main
 
 import (
-	"fmt"
-	"time"
 	"encoding/json"
+	"fmt"
 	"sync"
+	"time"
 
 	"github.com/jhunt/go-firehose"
 	"github.com/jhunt/go-log"
 )
 
 var (
-	/* deplloyment/job -> index -> name -> value */
-	Metrics map[string] map[string] map[string] Metric
+	/* deployment/job -> index -> name -> value */
+	Metrics map[string]map[string]map[string]Metric
 	Lock    sync.Mutex
 )
 
 func init() {
-	Metrics = make(map[string] map[string] map[string] Metric)
+	Metrics = make(map[string]map[string]map[string]Metric)
 }
 
 func Prune(expiry int) {
